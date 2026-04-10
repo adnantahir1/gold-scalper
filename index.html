@@ -306,24 +306,35 @@ function setTF(tf){
 
 // ── FETCH LIVE PRICE — multiple sources with CORS support ──
 async function fetchPrice(){
-  // Using Cloudflare Worker proxy — replace https://plain-paper-8b2e.adnantahir412.workers.dev with your worker URL
-  const WORKER = 'https://plain-paper-8b2e.adnantahir412.workers.dev';
+  const WORKER='https://plain-paper-8b2e.adnantahir412.workers.dev';
+  // Try /?type=price first
   try{
-    const r=await fetch(WORKER+'?type=price',{signal:AbortSignal.timeout(10000)});
+    const r=await fetch(WORKER+'/?type=price',{signal:AbortSignal.timeout(10000)});
     if(r.ok){
       const d=await r.json();
-      if(d.price&&d.price>1000){
-        document.getElementById('srcLbl').textContent='● LIVE · '+d.source+' · '+new Date().toLocaleTimeString();
-        return parseFloat(d.price.toFixed(2));
+      const p=d.price||d.XAU;
+      if(p&&parseFloat(p)>1000){
+        document.getElementById('srcLbl').textContent='● LIVE · '+( d.source||'worker')+' · '+new Date().toLocaleTimeString();
+        return parseFloat(parseFloat(p).toFixed(2));
+      }
+    }
+  }catch(e){}
+  // Fallback: root
+  try{
+    const r=await fetch(WORKER+'/',{signal:AbortSignal.timeout(10000)});
+    if(r.ok){
+      const d=await r.json();
+      const p=d.price||d.XAU;
+      if(p&&parseFloat(p)>1000){
+        document.getElementById('srcLbl').textContent='● LIVE · worker · '+new Date().toLocaleTimeString();
+        return parseFloat(parseFloat(p).toFixed(2));
       }
     }
   }catch(e){
-    document.getElementById('srcLbl').textContent='Worker error: '+e.message;
-    document.getElementById('csReason').textContent='Worker error: '+e.message+'. Set https://plain-paper-8b2e.adnantahir412.workers.dev in the file.';
+    document.getElementById('srcLbl').textContent='fetch err: '+e.message;
   }
   return null;
 }
-
 
 // Price history for building candles
 let priceHistory=[];
@@ -342,7 +353,7 @@ async function fetchCandles(){
     try{
       document.getElementById('csReason').textContent='Loading historical candles via proxy...';
       const WORKER='https://plain-paper-8b2e.adnantahir412.workers.dev';
-      const r=await fetch(WORKER+'?type=candles&interval='+currentTF,{signal:AbortSignal.timeout(15000)});
+      const r=await fetch(WORKER+'/?type=candles&interval='+currentTF,{signal:AbortSignal.timeout(15000)});
       if(r.ok){
         const w=await r.json();
         if(w.candles&&w.candles.length>10){
