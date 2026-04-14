@@ -234,7 +234,7 @@
 <script>
 const GROQ_KEY='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';
 const MODEL='llama-3.3-70b-versatile';
-const TP_PTS=12, SL_PTS=3;
+const TP_PTS=15, SL_PTS=5;
 const WORKER='https://plain-paper-8b2e.adnantahir412.workers.dev';
 
 let autoTimer=null,countTimer=null,tickTimer=null;
@@ -350,7 +350,7 @@ function calcInd(overridePrice){
 }
 
 async function callGroq(ind){
-  const prompt='You are an expert XAU/USD scalper. Give ONE signal.\n\nPrice:'+ind.cur.toFixed(2)+' EMA9:'+ind.e9+' EMA21:'+ind.e21+' EMA50:'+ind.e50+'\nRSI:'+ind.rsiV+' Trend:'+ind.trend+' Mom:'+ind.mom+' Vol:'+ind.vol+'pts\nSessionHigh:'+ind.sHigh.toFixed(2)+' SessionLow:'+ind.sLow.toFixed(2)+'\nNearEMA21:'+(ind.nearE21?'YES':'NO')+' NearSupport:'+(ind.nearSup?'YES':'NO')+' NearResistance:'+(ind.nearRes?'YES':'NO')+'\nCandles:'+ind.n+'\n\nBUY=BULLISH+EMA9>21>50+RSI42-68+RISING+nearEMA21orSupport\nSELL=BEARISH+EMA9<21<50+RSI32-58+FALLING+nearEMA21orResistance\nWAIT=not all aligned\nTP='+TP_PTS+'pts SL='+SL_PTS+'pts\n\nJSON only:\n{"signal":"WAIT","entry":'+ind.cur.toFixed(2)+',"strength":"WEAK","confidence":"LOW","trend":"MIXED","momentum":"FLAT","rsi_zone":"NEUTRAL","volatility":"NORMAL","reasoning":"2 sentences"}';
+  const prompt='You are a STRICT XAU/USD scalper. ONLY signal when conditions are PERFECT. When in doubt, WAIT.\n\nLIVE DATA:\nPrice:'+ind.cur.toFixed(2)+' | EMA9:'+ind.e9+' | EMA21:'+ind.e21+' | EMA50:'+ind.e50+'\nRSI(14):'+ind.rsiV+' | Trend:'+ind.trend+' | Momentum:'+ind.mom+'\nVolatility:'+ind.vol+'pts | Data points:'+ind.n+'\nSession High:'+ind.sHigh.toFixed(2)+' | Session Low:'+ind.sLow.toFixed(2)+'\nNear EMA21:'+(ind.nearE21?'YES':'NO')+' | Near Support:'+(ind.nearSup?'YES':'NO')+' | Near Resistance:'+(ind.nearRes?'YES':'NO')+'\n\nSTRICT RULES - ALL must be true to signal:\nBUY: trend=BULLISH AND EMA9>EMA21>EMA50 AND RSI between 45-65 AND momentum=RISING AND (nearEMA21 OR nearSupport) AND NOT nearResistance\nSELL: trend=BEARISH AND EMA9<EMA21<EMA50 AND RSI between 35-55 AND momentum=FALLING AND (nearEMA21 OR nearResistance) AND NOT nearSupport\nWAIT: ANY condition missing, RSI extreme (>70 or <30), trend=MIXED, momentum=FLAT, or setup unclear\n\nIF UNSURE → WAIT. Better to miss a trade than lose.\nTP='+TP_PTS+'pts SL='+SL_PTS+'pts (R:R=3:1)\n\nRespond with JSON only:\n{"signal":"WAIT","entry":'+ind.cur.toFixed(2)+',"strength":"WEAK","confidence":"LOW","trend":"MIXED","momentum":"FLAT","rsi_zone":"NEUTRAL","volatility":"NORMAL","reasoning":"Explain exactly why you chose this signal in 2 sentences"}';
   try{
     // Route through Cloudflare worker to avoid CORS issues
     const res=await fetch(WORKER+'/?type=groq',{
@@ -546,7 +546,13 @@ async function doAnalysis(){
       return;
     }
 
-    // Step 4: Calculate indicators
+    // Step 4: Require minimum data before firing signal
+    if(priceHistory.length<10){
+      document.getElementById('csBadge').textContent='COLLECTING DATA...';
+      document.getElementById('csReason').textContent='Building price history: '+priceHistory.length+'/10 points. Wait ~'+( (10-priceHistory.length)*15)+' more seconds...';
+      return;
+    }
+
     const ind=calcInd(price);
     if(!ind){
       document.getElementById('csReason').textContent='Need more data ('+closes.length+' candles). Collecting...';
