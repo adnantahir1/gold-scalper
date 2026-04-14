@@ -350,20 +350,25 @@ function calcInd(overridePrice){
 async function callGroq(ind){
   const prompt='You are an expert XAU/USD scalper. Give ONE signal.\n\nPrice:'+ind.cur.toFixed(2)+' EMA9:'+ind.e9+' EMA21:'+ind.e21+' EMA50:'+ind.e50+'\nRSI:'+ind.rsiV+' Trend:'+ind.trend+' Mom:'+ind.mom+' Vol:'+ind.vol+'pts\nSessionHigh:'+ind.sHigh.toFixed(2)+' SessionLow:'+ind.sLow.toFixed(2)+'\nNearEMA21:'+(ind.nearE21?'YES':'NO')+' NearSupport:'+(ind.nearSup?'YES':'NO')+' NearResistance:'+(ind.nearRes?'YES':'NO')+'\nCandles:'+ind.n+'\n\nBUY=BULLISH+EMA9>21>50+RSI42-68+RISING+nearEMA21orSupport\nSELL=BEARISH+EMA9<21<50+RSI32-58+FALLING+nearEMA21orResistance\nWAIT=not all aligned\nTP='+TP_PTS+'pts SL='+SL_PTS+'pts\n\nJSON only:\n{"signal":"WAIT","entry":'+ind.cur.toFixed(2)+',"strength":"WEAK","confidence":"LOW","trend":"MIXED","momentum":"FLAT","rsi_zone":"NEUTRAL","volatility":"NORMAL","reasoning":"2 sentences"}';
   try{
-    const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    // Route through Cloudflare worker to avoid CORS issues
+    const res=await fetch(WORKER+'/?type=groq',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+GROQ_KEY},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:MODEL,temperature:0.1,max_tokens:300,messages:[{role:'system',content:'Expert XAU/USD trader. JSON only.'},{role:'user',content:prompt}]}),
-      signal:AbortSignal.timeout(15000)
+      signal:AbortSignal.timeout(20000)
     });
     if(!res.ok){
       const e=await res.json().catch(function(){return{};});
-      const msg='Groq error '+(res.status)+': '+(e.error&&e.error.message||'unknown');
+      const msg='AI error '+(res.status)+': '+(e.error&&e.error.message||JSON.stringify(e));
       document.getElementById('csReason').textContent=msg;
       toast('err',msg);
       return null;
     }
     const data=await res.json();
+    if(data.error){
+      document.getElementById('csReason').textContent='Groq: '+data.error;
+      return null;
+    }
     const txt=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content||'').trim().replace(/```json|```/g,'').trim();
     return JSON.parse(txt);
   }catch(e){
