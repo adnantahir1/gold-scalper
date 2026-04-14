@@ -287,30 +287,9 @@ async function fetchPrice(){
 }
 
 async function fetchCandles(){
-  if(!historicalLoaded){
-    try{
-      document.getElementById('csReason').textContent='Loading 100 candles from proxy...';
-      const r=await fetch(WORKER+'/?type=candles&interval='+currentTF,{signal:AbortSignal.timeout(15000)});
-      if(r.ok){
-        const w=await r.json();
-        if(w.candles&&w.candles.length>10){
-          historicalLoaded=true;
-          w.candles.forEach(function(c){
-            const t=new Date(c.datetime).getTime();
-            if(!priceHistory.find(function(p){return Math.abs(p.time-t)<30000;})){
-              priceHistory.unshift({time:t,price:parseFloat(c.close)});
-            }
-          });
-          priceHistory.sort(function(a,b){return a.time-b.time;});
-          if(priceHistory.length>500)priceHistory=priceHistory.slice(-500);
-          document.getElementById('csReason').textContent='Loaded '+priceHistory.length+' data points!';
-        }
-      }
-    }catch(e){
-      document.getElementById('csReason').textContent='Candle fetch error: '+e.message;
-    }
-  }
-  if(priceHistory.length<3)return null;
+  // Build synthetic candles from priceHistory
+  // priceHistory is filled by fetchPrice every 15s + every analysis cycle
+  if(priceHistory.length<1) return null;
   const ms=parseInt(currentTF)*60*1000;
   const groups={};
   priceHistory.forEach(function(p){
@@ -329,15 +308,15 @@ async function fetchCandles(){
       close:g.prices[g.prices.length-1].toFixed(2)
     };
   });
-  return candles.length>=3?candles:null;
+  return candles.length>=1?candles:null;
 }
 
 
 function processCandles(candles){
   closes=candles.map(function(c){return parseFloat(c.close);});
   if(!basePrice)basePrice=closes[0];
-  sHigh=Math.max.apply(null,candles.map(function(c){return parseFloat(c.high);}));
-  sLow=Math.min.apply(null,candles.map(function(c){return parseFloat(c.low);}));
+  sHigh=Math.max.apply(null,candles.map(function(c){return parseFloat(c.high)||parseFloat(c.close);}));
+  sLow=Math.min.apply(null,candles.map(function(c){return parseFloat(c.low)||parseFloat(c.close);}));
   return parseFloat(candles[candles.length-1].close);
 }
 
@@ -352,7 +331,7 @@ function updatePriceDisplay(p,src){
 
 function calcInd(overridePrice){
   const a=closes;
-  if(a.length<5)return null;
+  if(a.length<1)return null;
   function ema(arr,n){n=Math.min(n,arr.length);const k=2/(n+1);let e=arr[0];for(let i=1;i<arr.length;i++)e=arr[i]*k+e*(1-k);return parseFloat(e.toFixed(2));}
   function rsi(arr,n){n=n||14;n=Math.min(n,arr.length-1);if(n<3)return 50;const d=arr.slice(-n-1).map(function(v,i,a){return i===0?0:v-a[i-1];}).slice(1);const g=d.filter(function(x){return x>0;}).reduce(function(s,x){return s+x;},0)/n;const l=d.filter(function(x){return x<0;}).reduce(function(s,x){return s+Math.abs(x);},0)/n;return l===0?100:parseFloat((100-100/(1+g/l)).toFixed(1));}
   const cur=overridePrice||a[a.length-1];
@@ -508,7 +487,7 @@ async function doAnalysis(){
     }
 
     if(!candles||candles.length<3){
-      document.getElementById('csReason').textContent='Collecting data... have '+priceHistory.length+' points. Need 3+ candles.';
+      document.getElementById('csReason').textContent='Collecting data... '+priceHistory.length+' price points so far...';
       return;
     }
 
