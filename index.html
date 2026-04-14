@@ -139,7 +139,7 @@
     <div class="cntd" id="cntd"></div>
     <button class="btn btn-stop" id="btnStop" onclick="stopAuto()" style="display:none">⏹ STOP</button>
     <button class="btn btn-go" id="btnStart" onclick="startAuto()" style="display:none">▶ START</button>
-    <button class="btn btn-once" id="btnOnce" onclick="analyzeOnce()" disabled>⚡ NOW</button>
+    <button class="btn btn-once" id="btnOnce" onclick="analyzeOnce()">⚡ NOW</button>
     <button class="btn" style="background:rgba(0,176,255,0.08);border-color:var(--blue);color:var(--blue);" onclick="openHistory()">📊 HISTORY</button>
     <select class="sel" id="intSel">
       <option value="30000">30s</option>
@@ -287,14 +287,9 @@ async function fetchPrice(){
 }
 
 async function fetchCandles(){
-  const livePrice=await fetchPrice();
-  if(livePrice){
-    priceHistory.push({time:Date.now(),price:livePrice});
-    if(priceHistory.length>500)priceHistory.shift();
-  }
   if(!historicalLoaded){
     try{
-      document.getElementById('csReason').textContent='Loading historical candles...';
+      document.getElementById('csReason').textContent='Loading 100 candles from proxy...';
       const r=await fetch(WORKER+'/?type=candles&interval='+currentTF,{signal:AbortSignal.timeout(15000)});
       if(r.ok){
         const w=await r.json();
@@ -308,14 +303,14 @@ async function fetchCandles(){
           });
           priceHistory.sort(function(a,b){return a.time-b.time;});
           if(priceHistory.length>500)priceHistory=priceHistory.slice(-500);
-          document.getElementById('csReason').textContent='Loaded '+priceHistory.length+' data points. Analyzing...';
+          document.getElementById('csReason').textContent='Loaded '+priceHistory.length+' data points!';
         }
       }
     }catch(e){
-      document.getElementById('csReason').textContent='Historical load error: '+e.message;
+      document.getElementById('csReason').textContent='Candle fetch error: '+e.message;
     }
   }
-  if(priceHistory.length<5)return null;
+  if(priceHistory.length<3)return null;
   const ms=parseInt(currentTF)*60*1000;
   const groups={};
   priceHistory.forEach(function(p){
@@ -334,8 +329,9 @@ async function fetchCandles(){
       close:g.prices[g.prices.length-1].toFixed(2)
     };
   });
-  return candles.length>=5?candles:null;
+  return candles.length>=3?candles:null;
 }
+
 
 function processCandles(candles){
   closes=candles.map(function(c){return parseFloat(c.close);});
@@ -492,44 +488,70 @@ async function doAnalysis(){
   document.getElementById('ldEl').classList.add('show');
   document.getElementById('cntd').textContent='';
   try{
-    document.getElementById('csBadge').textContent='FETCHING DATA...';
-    document.getElementById('csReason').textContent='Fetching live XAU/USD price...';
-    const candles=await fetchCandles();
-    const liveP=priceHistory.length>0?priceHistory[priceHistory.length-1].price:null;
-    if(candles&&candles.length>0){
-      const cp=processCandles(candles);
-      const price=liveP||cp;
-      updatePriceDisplay(price,'gold-api');
-      document.getElementById('btnOnce').disabled=false;
-      checkTrade(price);
-      if(inTrade){document.getElementById('csReason').textContent='Trade open — TP:'+tradeTP.toFixed(2)+' SL:'+tradeSL.toFixed(2);return;}
-      const ind=calcInd(price);
-      if(!ind){document.getElementById('csReason').textContent='Building data... ('+closes.length+' candles so far)';return;}
-      document.getElementById('csReason').textContent='Calling Groq AI... price='+price.toFixed(2)+' candles='+closes.length;
-      const result=await callGroq(ind);
-      if(!result)return;
-      renderConds(result);
-      if(result.signal==='BUY'||result.signal==='SELL'){
-        openTrade(result.signal,price,result);
-        renderAll();
-      }else{
-        document.getElementById('sigBadge').className='sbadge wait';
-        document.getElementById('sigBadge').textContent='WAIT — '+result.trend;
-        document.getElementById('csBadge').className='cs-badge wait';
-        document.getElementById('csBadge').textContent='WAIT — '+result.trend;
-        document.getElementById('csTime').textContent=new Date().toLocaleTimeString();
-      }
-    }else if(liveP){
+    document.getElementById('csBadge').textContent='FETCHING PRICE...';
+
+    // Step 1: Get live price
+    const liveP=await fetchPrice();
+    if(liveP){
+      priceHistory.push({time:Date.now(),price:liveP});
+      if(priceHistory.length>500)priceHistory.shift();
       updatePriceDisplay(liveP,'gold-api');
-      document.getElementById('csReason').textContent='Price: '+liveP.toFixed(2)+' — Loading candle history...';
+    }
+
+    // Step 2: Get historical candles
+    const candles=await fetchCandles();
+    const price=liveP||(priceHistory.length>0?priceHistory[priceHistory.length-1].price:null);
+
+    if(!price){
+      document.getElementById('csReason').textContent='Cannot fetch price. Is internet working?';
+      return;
+    }
+
+    if(!candles||candles.length<3){
+      document.getElementById('csReason').textContent='Collecting data... have '+priceHistory.length+' points. Need 3+ candles.';
+      return;
+    }
+
+    // Step 3: Process
+    processCandles(candles);
+    updatePriceDisplay(price,'gold-api');
+    checkTrade(price);
+    if(inTrade){
+      document.getElementById('csReason').textContent='Trade active — TP:'+tradeTP.toFixed(2)+' SL:'+tradeSL.toFixed(2);
+      return;
+    }
+
+    // Step 4: Calculate indicators
+    const ind=calcInd(price);
+    if(!ind){
+      document.getElementById('csReason').textContent='Need more data ('+closes.length+' candles). Collecting...';
+      return;
+    }
+
+    // Step 5: Call Groq
+    document.getElementById('csBadge').textContent='CALLING AI...';
+    document.getElementById('csReason').textContent='Price:'+price.toFixed(2)+' Candles:'+closes.length+' → Groq AI analyzing...';
+    const result=await callGroq(ind);
+    if(!result)return;
+
+    renderConds(result);
+
+    if(result.signal==='BUY'||result.signal==='SELL'){
+      openTrade(result.signal,price,result);
+      renderAll();
     }else{
-      document.getElementById('csReason').textContent='Cannot fetch price. Check internet connection.';
+      document.getElementById('sigBadge').className='sbadge wait';
+      document.getElementById('sigBadge').textContent='WAIT — '+result.trend;
+      document.getElementById('csBadge').className='cs-badge wait';
+      document.getElementById('csBadge').textContent='WAIT — '+result.trend;
+      document.getElementById('csTime').textContent=new Date().toLocaleTimeString();
     }
   }finally{
     analysisRunning=false;
     document.getElementById('ldEl').classList.remove('show');
   }
 }
+
 
 function startCountdown(ms){
   let rem=Math.floor(ms/1000);
@@ -625,6 +647,8 @@ function markHM(i,res){mark(i,res);renderHM();}
 window.addEventListener('load',function(){
   updateStats();
   renderAll();
+  // Enable NOW button immediately
+  document.getElementById('btnOnce').disabled=false;
   setTimeout(startAuto,500);
 });
 </script>
