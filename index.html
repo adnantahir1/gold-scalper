@@ -330,8 +330,10 @@ function updatePriceDisplay(p,src){
 }
 
 function calcInd(overridePrice){
-  const a=closes;
+  let a=closes.slice();
   if(a.length<1)return null;
+  // Pad with first value if not enough data for EMA
+  while(a.length<21){a.unshift(a[0]);}
   function ema(arr,n){n=Math.min(n,arr.length);const k=2/(n+1);let e=arr[0];for(let i=1;i<arr.length;i++)e=arr[i]*k+e*(1-k);return parseFloat(e.toFixed(2));}
   function rsi(arr,n){n=n||14;n=Math.min(n,arr.length-1);if(n<3)return 50;const d=arr.slice(-n-1).map(function(v,i,a){return i===0?0:v-a[i-1];}).slice(1);const g=d.filter(function(x){return x>0;}).reduce(function(s,x){return s+x;},0)/n;const l=d.filter(function(x){return x<0;}).reduce(function(s,x){return s+Math.abs(x);},0)/n;return l===0?100:parseFloat((100-100/(1+g/l)).toFixed(1));}
   const cur=overridePrice||a[a.length-1];
@@ -494,18 +496,45 @@ async function doAnalysis(){
       updatePriceDisplay(liveP,'gold-api');
     }
 
-    // Step 2: Get historical candles
-    const candles=await fetchCandles();
     const price=liveP||(priceHistory.length>0?priceHistory[priceHistory.length-1].price:null);
 
     if(!price){
-      document.getElementById('csReason').textContent='Cannot fetch price. Is internet working?';
+      document.getElementById('csReason').textContent='Cannot fetch price. Check internet.';
       return;
     }
 
-    if(!candles||candles.length<3){
-      document.getElementById('csReason').textContent='Collecting data... '+priceHistory.length+' price points so far...';
-      return;
+    // Step 2: Build candles from priceHistory (even with 1 price point)
+    // If we only have 1 price, create a synthetic candle array for AI analysis
+    let candles=null;
+    if(priceHistory.length>=1){
+      const ms=parseInt(currentTF)*60*1000;
+      const groups={};
+      priceHistory.forEach(function(p){
+        const key=Math.floor(p.time/ms)*ms;
+        if(!groups[key])groups[key]={time:key,prices:[]};
+        groups[key].prices.push(p.price);
+      });
+      candles=Object.values(groups).sort(function(a,b){return a.time-b.time;}).map(function(g){
+        const d=new Date(g.time);
+        const pad=function(n){return String(n).padStart(2,'0');};
+        return{
+          datetime:d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':00',
+          open:g.prices[0].toFixed(2),
+          high:Math.max.apply(null,g.prices).toFixed(2),
+          low:Math.min.apply(null,g.prices).toFixed(2),
+          close:g.prices[g.prices.length-1].toFixed(2)
+        };
+      });
+    }
+
+    // If still no candles, create one from current price
+    if(!candles||candles.length===0){
+      const now=new Date();
+      const pad=function(n){return String(n).padStart(2,'0');};
+      candles=[{
+        datetime:now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate())+' '+pad(now.getHours())+':'+pad(now.getMinutes())+':00',
+        open:price.toFixed(2),high:price.toFixed(2),low:price.toFixed(2),close:price.toFixed(2)
+      }];
     }
 
     // Step 3: Process
