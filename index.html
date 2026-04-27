@@ -148,16 +148,12 @@
     </select>
   </div>
 </div>
-
 <div class="chart-area">
-  <iframe id="tvFrame"
-    src="https://s.tradingview.com/widgetembed/?frameElementId=tvFrame&symbol=FOREXCOM%3AXAUUSD&interval=1&hidesidetoolbar=0&hidetoptoolbar=0&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&allow_symbol_change=0&locale=en&overrides=%7B%22mainSeriesProperties.candleStyle.upColor%22%3A%22%2300e676%22%2C%22mainSeriesProperties.candleStyle.downColor%22%3A%22%23ff1744%22%2C%22mainSeriesProperties.candleStyle.borderUpColor%22%3A%22%2300e676%22%2C%22mainSeriesProperties.candleStyle.borderDownColor%22%3A%22%23ff1744%22%2C%22paneProperties.background%22%3A%22%23020508%22%2C%22paneProperties.backgroundType%22%3A%22solid%22%2C%22scalesProperties.textColor%22%3A%22%23c8d8e8%22%2C%22paneProperties.vertGridProperties.color%22%3A%22%230d2035%22%2C%22paneProperties.horzGridProperties.color%22%3A%22%230d2035%22%7D&studies=MASimple%40tv-basicstudies%1FMASimple%40tv-basicstudies%1FMASimple%40tv-basicstudies&studies_overrides=%7B%220.length%22%3A9%2C%220.color%22%3A%2200b0ff%22%2C%221.length%22%3A21%2C%221.color%22%3A%22f0b429%22%2C%222.length%22%3A50%2C%222.color%22%3A%22ce93d8%22%7D"
-    allowtransparency="true" allowfullscreen scrolling="no">
-  </iframe>
+  <iframe id="tvFrame" src="https://s.tradingview.com/widgetembed/?frameElementId=tvFrame&symbol=FOREXCOM%3AXAUUSD&interval=1&hidesidetoolbar=0&hidetoptoolbar=0&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&allow_symbol_change=0&locale=en&overrides=%7B%22mainSeriesProperties.candleStyle.upColor%22%3A%22%2300e676%22%2C%22mainSeriesProperties.candleStyle.downColor%22%3A%22%23ff1744%22%2C%22mainSeriesProperties.candleStyle.borderUpColor%22%3A%22%2300e676%22%2C%22mainSeriesProperties.candleStyle.borderDownColor%22%3A%22%23ff1744%22%2C%22paneProperties.background%22%3A%22%23020508%22%2C%22paneProperties.backgroundType%22%3A%22solid%22%2C%22scalesProperties.textColor%22%3A%22%23c8d8e8%22%2C%22paneProperties.vertGridProperties.color%22%3A%22%230d2035%22%2C%22paneProperties.horzGridProperties.color%22%3A%22%230d2035%22%7D&studies=MASimple%40tv-basicstudies%1FMASimple%40tv-basicstudies%1FMASimple%40tv-basicstudies&studies_overrides=%7B%220.length%22%3A9%2C%220.color%22%3A%2200b0ff%22%2C%221.length%22%3A21%2C%221.color%22%3A%22f0b429%22%2C%222.length%22%3A50%2C%222.color%22%3A%22ce93d8%22%7D" allowtransparency="true" allowfullscreen scrolling="no"></iframe>
   <div class="sig-panel">
     <div class="cur-signal wait" id="curSig">
       <div class="cs-header">
-        <div class="cs-badge wait" id="csBadge">⏳ COLLECTING DATA...</div>
+        <div class="cs-badge wait" id="csBadge">⏳ COLLECTING...</div>
         <div class="cs-time" id="csTime">—</div>
       </div>
       <div class="cs-levels" id="csLevels" style="display:none">
@@ -168,12 +164,9 @@
       <div class="trade-progress" id="tradeProgress" style="display:none">
         <div class="tp-bar-wrap"><div class="tp-bar" id="tpBar" style="width:0%"></div></div>
         <div class="sl-bar-wrap"><div class="sl-bar" id="slBar" style="width:0%"></div></div>
-        <div class="bar-labels"><span style="color:var(--green)" id="tpDist">—</span><span id="priceDist">current</span><span style="color:var(--red)" id="slDist">—</span></div>
+        <div class="bar-labels"><span style="color:var(--green)" id="tpDist">—</span><span id="priceDist"></span><span style="color:var(--red)" id="slDist">—</span></div>
       </div>
-      <div class="cs-reason">
-        <div class="cs-rl">GROQ AI · LLAMA 3</div>
-        <div id="csReason">Collecting data... first signal in ~1 minute.</div>
-      </div>
+      <div class="cs-reason"><div class="cs-rl">GROQ AI · LLAMA 3</div><div id="csReason">Collecting data... signal in ~75 seconds.</div></div>
       <div class="cs-conds">
         <div class="cc"><div class="cl">TREND</div><span class="cv neu" id="cT">—</span></div>
         <div class="cc"><div class="cl">MOM</div><span class="cv neu" id="cM">—</span></div>
@@ -186,7 +179,6 @@
     <div class="hist-cards" id="histCards"></div>
   </div>
 </div>
-
 <div class="botbar">
   <div class="stats">
     <div class="si"><div class="sl">WIN RATE</div><div class="sv gold" id="sWR">—</div></div>
@@ -196,15 +188,10 @@
     <div class="si"><div class="sl">TRADES</div><div class="sv" id="sTot" style="color:var(--blue)">0</div></div>
   </div>
   <div class="vd"></div>
-  <div style="flex:1;min-width:0">
-    <div class="rbl">LAST AI REASONING</div>
-    <div class="rbt" id="rbt">Waiting...</div>
-  </div>
+  <div style="flex:1;min-width:0"><div class="rbl">LAST AI REASONING</div><div class="rbt" id="rbt">Waiting...</div></div>
 </div>
-
 <div class="toast err" id="toastErr"></div>
 <div class="toast ok" id="toastOk"></div>
-
 <div class="hmodal" id="histModal">
   <div class="hm-top">
     <span style="font-family:'Orbitron',monospace;font-size:13px;font-weight:900;color:#00b0ff;">📊 TRADE HISTORY</span>
@@ -215,30 +202,16 @@
   <div class="hm-body">
     <div class="stat-grid" id="hmStats"></div>
     <div style="background:#070d14;border:1px solid #0d2035;border-radius:4px;padding:8px 14px;margin-bottom:16px;" id="hmBar"></div>
-    <div class="tbl-wrap">
-      <table class="htbl">
-        <thead><tr>
-          <th>#</th><th>SIGNAL</th><th>DATE/TIME</th><th>ENTRY</th>
-          <th>TAKE PROFIT</th><th>STOP LOSS</th><th>RESULT</th><th>P&amp;L</th>
-        </tr></thead>
-        <tbody id="hmBody"></tbody>
-      </table>
-    </div>
+    <div class="tbl-wrap"><table class="htbl"><thead><tr><th>#</th><th>SIGNAL</th><th>DATE/TIME</th><th>ENTRY</th><th>TAKE PROFIT</th><th>STOP LOSS</th><th>RESULT</th><th>P&amp;L</th></tr></thead><tbody id="hmBody"></tbody></table></div>
   </div>
 </div>
-
 <script>
-const WORKER = 'https://plain-paper-8b2e.adnantahir412.workers.dev';
-const MODEL  = 'llama-3.3-70b-versatile';
-const TP_PTS = 10;
-const SL_PTS = 4;
-const MIN_PTS = 5;
-
+const WORKER='https://plain-paper-8b2e.adnantahir412.workers.dev';
+const MODEL='llama-3.3-70b-versatile';
+const TP_PTS=10,SL_PTS=4,MIN_PTS=5;
 let autoTimer=null,countTimer=null,tickTimer=null;
-let priceHistory=[],closes=[],basePrice=null,sHigh=null,sLow=null;
-let currentTF='1';
-let inTrade=false,tradeDir=null,tradeEntry=null,tradeTP=null,tradeSL=null;
-let analysisRunning=false;
+let priceHistory=[],closes=[],basePrice=null,sHigh=null,sLow=null,currentTF='1';
+let inTrade=false,tradeDir=null,tradeEntry=null,tradeTP=null,tradeSL=null,analysisRunning=false;
 let history=[],wins=0,losses=0,netPts=0;
 
 function loadHistory(){
@@ -252,16 +225,15 @@ function loadHistory(){
 }
 function saveHistory(){try{localStorage.setItem('xau_scalper_hist',JSON.stringify(history));}catch(e){}}
 function saveActiveTrade(){
-  if(inTrade){localStorage.setItem('xau_active_trade',JSON.stringify({dir:tradeDir,entry:tradeEntry,tp:tradeTP,sl:tradeSL}));}
-  else{localStorage.removeItem('xau_active_trade');}
+  if(inTrade)localStorage.setItem('xau_active_trade',JSON.stringify({dir:tradeDir,entry:tradeEntry,tp:tradeTP,sl:tradeSL}));
+  else localStorage.removeItem('xau_active_trade');
 }
 loadHistory();
 
 function toast(type,txt,dur){
   dur=dur||5000;
   const e=document.getElementById('toast'+type.charAt(0).toUpperCase()+type.slice(1));
-  if(!e)return;
-  e.textContent=txt;e.classList.add('show');
+  if(!e)return;e.textContent=txt;e.classList.add('show');
   setTimeout(function(){e.classList.remove('show');},dur);
 }
 
@@ -317,17 +289,14 @@ function updatePriceDisplay(p){
 function updateTradeProgress(p){
   if(!inTrade)return;
   const isBuy=tradeDir==='BUY';
-  const tpPct=Math.min(100,Math.max(0,(isBuy?(p-tradeEntry)/TP_PTS:(tradeEntry-p)/TP_PTS)*100));
-  const slPct=Math.min(100,Math.max(0,(isBuy?(tradeEntry-p)/SL_PTS:(p-tradeEntry)/SL_PTS)*100));
-  document.getElementById('tpBar').style.width=tpPct+'%';
-  document.getElementById('slBar').style.width=slPct+'%';
-  document.getElementById('tpDist').textContent='TP: '+(isBuy?(tradeTP-p):(p-tradeTP)).toFixed(1)+'pts away';
-  document.getElementById('slDist').textContent='SL: '+(isBuy?(p-tradeSL):(tradeSL-p)).toFixed(1)+'pts away';
+  document.getElementById('tpBar').style.width=Math.min(100,Math.max(0,(isBuy?(p-tradeEntry)/TP_PTS:(tradeEntry-p)/TP_PTS)*100))+'%';
+  document.getElementById('slBar').style.width=Math.min(100,Math.max(0,(isBuy?(tradeEntry-p)/SL_PTS:(p-tradeEntry)/SL_PTS)*100))+'%';
+  document.getElementById('tpDist').textContent='TP: '+(isBuy?(tradeTP-p):(p-tradeTP)).toFixed(1)+'pts';
+  document.getElementById('slDist').textContent='SL: '+(isBuy?(p-tradeSL):(tradeSL-p)).toFixed(1)+'pts';
 }
 
 function calcInd(price){
-  let a=closes.slice();
-  if(a.length<1)return null;
+  let a=closes.slice();if(a.length<1)return null;
   while(a.length<21)a.unshift(a[0]);
   function ema(arr,n){n=Math.min(n,arr.length);const k=2/(n+1);let e=arr[0];for(let i=1;i<arr.length;i++)e=arr[i]*k+e*(1-k);return parseFloat(e.toFixed(2));}
   function rsi(arr,n){n=n||14;n=Math.min(n,arr.length-1);if(n<3)return 50;const d=arr.slice(-n-1).map(function(v,i,a){return i===0?0:v-a[i-1];}).slice(1);const g=d.filter(function(x){return x>0;}).reduce(function(s,x){return s+x;},0)/n;const l=d.filter(function(x){return x<0;}).reduce(function(s,x){return s+Math.abs(x);},0)/n;return l===0?100:parseFloat((100-100/(1+g/l)).toFixed(1));}
@@ -344,95 +313,262 @@ function calcInd(price){
 }
 
 async function callGroq(ind){
-  // PURE TECHNICAL SIGNAL — no AI gatekeeping
-  // AI is only used for reasoning text, signal is decided by code
-  let signal = 'WAIT';
-  let reasoning = '';
+  const rsi=ind.rsiV,e9=ind.e9,e21=ind.e21,e50=ind.e50,mom=ind.mom,trend=ind.trend;
+  let signal='WAIT',reasoning='';
+  const bullish=trend==='BULLISH'||e9>e21;
+  const bearish=trend==='BEARISH'||e9<e21;
 
-  const rsi = ind.rsiV;
-  const e9 = ind.e9, e21 = ind.e21, e50 = ind.e50;
-  const mom = ind.mom;
-  const trend = ind.trend;
+  // BUY — requires bullish structure, no counter-trend
+  if(!bearish&&rsi<35&&mom!=='FALLING'){signal='BUY';reasoning='RSI oversold at '+rsi+' with bullish structure. Bounce setup.';}
+  else if(bullish&&e9>e21&&mom==='RISING'&&rsi<65){signal='BUY';reasoning='Bullish EMA cross with rising momentum. RSI '+rsi+' has room up.';}
+  else if(bullish&&ind.nearSup&&mom==='RISING'&&rsi<60){signal='BUY';reasoning='Bouncing from session support in bullish structure.';}
+  else if(trend==='BULLISH'&&e9>e21&&e21>e50&&rsi<58&&mom!=='FALLING'){signal='BUY';reasoning='Full bullish EMA stack. Trend continuation entry.';}
+  // SELL — requires bearish structure, no counter-trend
+  else if(!bullish&&rsi>65&&mom!=='RISING'){signal='SELL';reasoning='RSI overbought at '+rsi+' with bearish structure. Rejection setup.';}
+  else if(bearish&&e9<e21&&mom==='FALLING'&&rsi>35){signal='SELL';reasoning='Bearish EMA cross with falling momentum. RSI '+rsi+' has room down.';}
+  else if(bearish&&ind.nearRes&&mom==='FALLING'&&rsi>40){signal='SELL';reasoning='Rejecting session resistance in bearish structure.';}
+  else if(trend==='BEARISH'&&e9<e21&&e21<e50&&rsi>42&&mom!=='RISING'){signal='SELL';reasoning='Full bearish EMA stack. Trend continuation entry.';}
+  else{reasoning='No clean setup: RSI '+rsi+' Trend '+trend+' Mom '+mom+'. Conflicting signals.';}
 
-  // ── SIGNAL RULES WITH TREND FILTER ──────────────────
-  // Rule: never fight the trend. RSI oversold in downtrend = keep falling.
-
-  const bullish = trend==='BULLISH' || e9>e21;
-  const bearish = trend==='BEARISH' || e9<e21;
-
-  // BUY: needs bullish evidence + not in clear downtrend
-  if(!bearish && rsi < 35 && mom !== 'FALLING') {
-    signal = 'BUY'; reasoning = 'RSI oversold at '+rsi+' with no bearish trend. Bounce setup confirmed.';
-  } else if(bullish && e9>e21 && mom==='RISING' && rsi<65) {
-    signal = 'BUY'; reasoning = 'Bullish EMA alignment with rising momentum. RSI '+rsi+' has room to go higher.';
-  } else if(bullish && ind.nearSup && mom==='RISING' && rsi<60) {
-    signal = 'BUY'; reasoning = 'Price bouncing from support in bullish structure. Clean scalp entry.';
-  } else if(trend==='BULLISH' && e9>e21 && e21>e50 && rsi<58 && mom!=='FALLING') {
-    signal = 'BUY'; reasoning = 'Full bullish EMA stack confirmed. RSI '+rsi+' neutral. Trend continuation buy.';
-  }
-
-  // SELL: needs bearish evidence + not in clear uptrend
-  else if(!bullish && rsi > 65 && mom !== 'RISING') {
-    signal = 'SELL'; reasoning = 'RSI overbought at '+rsi+' with no bullish trend. Rejection setup confirmed.';
-  } else if(bearish && e9<e21 && mom==='FALLING' && rsi>35) {
-    signal = 'SELL'; reasoning = 'Bearish EMA alignment with falling momentum. RSI '+rsi+' has room to drop.';
-  } else if(bearish && ind.nearRes && mom==='FALLING' && rsi>40) {
-    signal = 'SELL'; reasoning = 'Price rejecting resistance in bearish structure. Clean short entry.';
-  } else if(trend==='BEARISH' && e9<e21 && e21<e50 && rsi>42 && mom!=='RISING') {
-    signal = 'SELL'; reasoning = 'Full bearish EMA stack confirmed. RSI '+rsi+' neutral. Trend continuation sell.';
-  }
-
-  // WAIT
-  else {
-    reasoning = 'No clean setup: RSI '+rsi+' Trend '+trend+' Mom '+mom+'. Conflicting signals — waiting.';
-  }
-
-  // Use Groq only to get a confirmation and better reasoning (non-blocking)
-  // If Groq fails, still use technical signal
-  try {
-    const prompt = 'XAU/USD scalper. Price:'+ind.cur.toFixed(2)+' EMA9:'+e9+' EMA21:'+e21+' RSI:'+rsi+' Trend:'+trend+' Mom:'+mom
-      +' SessionHigh:'+ind.sHigh.toFixed(2)+' SessionLow:'+ind.sLow.toFixed(2)
-      +'
-Technical analysis says: '+signal
-      +'
-Confirm or override with JSON only (2 sentence reasoning):'
-      +'
-{"signal":"'+signal+'","entry":'+ind.cur.toFixed(2)+',"strength":"STRONG","confidence":"HIGH","trend":"'+trend+'","momentum":"'+mom+'","rsi_zone":"'+(rsi<35?'OVERSOLD':rsi>65?'OVERBOUGHT':'NEUTRAL')+'","volatility":"NORMAL","reasoning":"your 2 sentence analysis"}';
-
-    const res = await fetch(WORKER+'/?type=groq', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({model:MODEL, temperature:0.1, max_tokens:200,
-        messages:[
-          {role:'system', content:'XAU/USD scalper. Confirm the technical signal. JSON only.'},
-          {role:'user', content:prompt}
-        ]
-      }),
-      signal: AbortSignal.timeout(15000)
-    });
-    if(res.ok) {
-      const data = await res.json();
-      if(!data.error) {
-        const txt = (data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content||'').trim().replace(/```json|```/g,'').trim();
-        const parsed = JSON.parse(txt);
-        // Use AI reasoning but keep our technical signal
-        reasoning = parsed.reasoning || reasoning;
-        // Only override to WAIT if AI strongly disagrees AND we don't have a very strong signal
-        if(parsed.signal === 'WAIT' && rsi >= 32 && rsi <= 68 && !ind.nearSup && !ind.nearRes) {
-          signal = 'WAIT';
-        }
-        return {...parsed, signal: signal, reasoning: reasoning};
+  // AI confirms and adds reasoning
+  try{
+    const prompt='XAU/USD scalper. Price:'+ind.cur.toFixed(2)+' EMA9:'+e9+' EMA21:'+e21+' RSI:'+rsi+' Trend:'+trend+' Mom:'+mom
+      +' High:'+ind.sHigh.toFixed(2)+' Low:'+ind.sLow.toFixed(2)
+      +'\nTechnical says: '+signal+'. Confirm with JSON:\n'
+      +'{"signal":"'+signal+'","entry":'+ind.cur.toFixed(2)+',"strength":"STRONG","confidence":"HIGH","trend":"'+trend+'","momentum":"'+mom+'","rsi_zone":"'+(rsi<35?'OVERSOLD':rsi>65?'OVERBOUGHT':'NEUTRAL')+'","volatility":"NORMAL","reasoning":"2 sentence analysis"}';
+    const res=await fetch(WORKER+'/?type=groq',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:MODEL,temperature:0.1,max_tokens:200,messages:[{role:'system',content:'XAU/USD scalper. JSON only.'},{role:'user',content:prompt}]}),
+      signal:AbortSignal.timeout(15000)});
+    if(res.ok){
+      const data=await res.json();
+      if(!data.error){
+        const txt=(data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content||'').trim().replace(/```json|```/g,'').trim();
+        const parsed=JSON.parse(txt);
+        reasoning=parsed.reasoning||reasoning;
+        // Only allow AI to override to WAIT if signal is borderline (not strong RSI signal)
+        if(parsed.signal==='WAIT'&&rsi>=32&&rsi<=68&&!ind.nearSup&&!ind.nearRes)signal='WAIT';
+        return{...parsed,signal:signal,reasoning:reasoning};
       }
     }
-  } catch(e) {
-    // Groq failed — use pure technical signal
-    document.getElementById('csReason').textContent = 'Using technical analysis (AI timeout)';
-  }
-
-  return {
-    signal: signal, entry: ind.cur, strength: signal!=='WAIT'?'STRONG':'WEAK',
-    confidence: signal!=='WAIT'?'HIGH':'LOW', trend: trend, momentum: mom,
-    rsi_zone: rsi<35?'OVERSOLD':rsi>65?'OVERBOUGHT':'NEUTRAL',
-    volatility: 'NORMAL', reasoning: reasoning
-  };
+  }catch(e){document.getElementById('csReason').textContent='Technical: '+signal+' (AI timeout)';}
+  return{signal:signal,entry:ind.cur,strength:signal!=='WAIT'?'STRONG':'WEAK',confidence:signal!=='WAIT'?'HIGH':'LOW',
+    trend:trend,momentum:mom,rsi_zone:rsi<35?'OVERSOLD':rsi>65?'OVERBOUGHT':'NEUTRAL',volatility:'NORMAL',reasoning:reasoning};
 }
+
+function checkTrade(p){
+  if(!inTrade)return;
+  updateTradeProgress(p);
+  const hitTP=tradeDir==='BUY'?p>=tradeTP:p<=tradeTP;
+  const hitSL=tradeDir==='BUY'?p<=tradeSL:p>=tradeSL;
+  if(hitTP){wins++;netPts+=TP_PTS;if(history.length){history[0].result='WIN';history[0].closedAt=p.toFixed(2);}
+    toast('ok','✅ TP HIT! +'+TP_PTS+' pts — WIN!',7000);beep(880,0.5,'sine');
+    closeTrade();saveHistory();updateStats();renderHistCards();}
+  else if(hitSL){losses++;netPts-=SL_PTS;if(history.length){history[0].result='LOSS';history[0].closedAt=p.toFixed(2);}
+    toast('err','❌ SL HIT! -'+SL_PTS+' pts',7000);beep(200,0.5,'sawtooth');
+    closeTrade();saveHistory();updateStats();renderHistCards();}
+}
+
+function closeTrade(){
+  inTrade=false;tradeDir=tradeEntry=tradeTP=tradeSL=null;
+  document.getElementById('pillsDiv').style.display='none';
+  document.getElementById('csLevels').style.display='none';
+  document.getElementById('tradeProgress').style.display='none';
+  document.getElementById('curSig').className='cur-signal wait';
+  document.getElementById('csBadge').className='cs-badge wait';
+  document.getElementById('csBadge').textContent='SCANNING...';
+  document.getElementById('sigBadge').className='sbadge wait';
+  document.getElementById('sigBadge').textContent='🔍 SCANNING...';
+  saveActiveTrade();
+}
+
+function openTrade(signal,price,r){
+  inTrade=true;tradeDir=signal;tradeEntry=price;
+  tradeTP=signal==='BUY'?price+TP_PTS:price-TP_PTS;
+  tradeSL=signal==='BUY'?price-SL_PTS:price+SL_PTS;
+  const now=new Date().toLocaleTimeString(),isBuy=signal==='BUY',dir=isBuy?'buy':'sell';
+  document.getElementById('sigBadge').className='sbadge '+dir+' pulse';
+  document.getElementById('sigBadge').textContent=(isBuy?'▲ BUY':'▼ SELL')+' @ '+price.toFixed(2);
+  document.getElementById('pEntry').textContent='ENTRY '+price.toFixed(2);
+  document.getElementById('pTP').textContent='TP '+tradeTP.toFixed(2)+' ('+(isBuy?'+':'-')+TP_PTS+')';
+  document.getElementById('pSL').textContent='SL '+tradeSL.toFixed(2)+' (-'+SL_PTS+')';
+  document.getElementById('pillsDiv').style.display='flex';
+  document.getElementById('curSig').className='cur-signal '+dir;
+  document.getElementById('csBadge').className='cs-badge '+dir;
+  document.getElementById('csBadge').textContent=(isBuy?'▲ BUY':'▼ SELL')+' @ '+price.toFixed(2);
+  document.getElementById('csTime').textContent=now;
+  document.getElementById('csE').textContent=price.toFixed(2);
+  document.getElementById('csT').textContent=tradeTP.toFixed(2);
+  document.getElementById('csS').textContent=tradeSL.toFixed(2);
+  document.getElementById('csTp').textContent=(isBuy?'+':'-')+TP_PTS+' pts';
+  document.getElementById('csSp').textContent='-'+SL_PTS+' pts';
+  document.getElementById('csLevels').style.display='grid';
+  document.getElementById('tradeProgress').style.display='block';
+  document.getElementById('csReason').textContent=r.reasoning||'Signal conditions aligned.';
+  beep(isBuy?880:440,0.6,isBuy?'sine':'sawtooth');
+  toast('ok',(isBuy?'🟢 BUY':'🔴 SELL')+' @ '+price.toFixed(2)+' TP:'+tradeTP.toFixed(2)+' SL:'+tradeSL.toFixed(2),8000);
+  history.unshift({signal:signal,price:price.toFixed(2),tp:tradeTP.toFixed(2),sl:tradeSL.toFixed(2),time:now,date:new Date().toLocaleDateString(),result:'OPEN',closedAt:'—'});
+  if(history.length>200)history.pop();
+  saveHistory();saveActiveTrade();
+}
+
+function renderConds(r){
+  function set(id,val,cls){const e=document.getElementById(id);e.textContent=val;e.className='cv '+cls;}
+  set('cT',r.trend,r.trend==='BULLISH'?'bull':r.trend==='BEARISH'?'bear':'neu');
+  set('cM',r.momentum,(r.momentum||'').match(/RISING|UP/)?'bull':(r.momentum||'').match(/FALLING|DOWN/)?'bear':'neu');
+  set('cR',r.rsi_zone,(r.rsi_zone||'').includes('OVERSOLD')?'bull':(r.rsi_zone||'').includes('OVERBOUGHT')?'bear':'neu');
+  set('cS',r.strength,r.strength==='STRONG'?'bull':r.strength==='WEAK'?'bear':'neu');
+  set('cC',r.confidence,r.confidence==='HIGH'?'bull':r.confidence==='LOW'?'bear':'neu');
+  set('cV',r.volatility,'neu');
+  document.getElementById('rbt').textContent=r.reasoning||'';
+  if(!inTrade)document.getElementById('csReason').textContent=r.reasoning||'';
+}
+
+function beep(freq,dur,type){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=freq;o.type=type;g.gain.setValueAtTime(0.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);o.start();o.stop(ctx.currentTime+dur);}catch(e){}}
+
+function renderHistCards(){
+  const el=document.getElementById('histCards'),recent=history.slice(0,6);
+  if(!recent.length){el.innerHTML='';return;}
+  el.innerHTML=recent.map(function(h){
+    const sc=h.signal==='BUY'?'buy':'sell',rc=h.result==='WIN'?'win':h.result==='LOSS'?'loss':'open';
+    return '<div class="hcard '+(h.result==='WIN'?'win-card':h.result==='LOSS'?'loss-card':'')+'">'
+      +'<div class="hcard-top"><span class="hc-sig '+sc+'">'+h.signal+'</span><span style="color:var(--dim)">@ '+h.price+'</span>'
+      +'<span class="hc-res '+rc+'">'+(h.result==='WIN'?'✓ WIN':h.result==='LOSS'?'✗ LOSS':'● OPEN')+'</span></div>'
+      +'<div class="hcard-bot">TP:<span style="color:var(--green)">'+h.tp+'</span> SL:<span style="color:var(--red)">'+h.sl+'</span> '+h.time+'</div></div>';
+  }).join('');
+}
+
+function updateStats(){
+  const tot=wins+losses;
+  document.getElementById('sWR').textContent=tot>0?((wins/tot)*100).toFixed(1)+'%':'—';
+  document.getElementById('sW').textContent=wins;
+  document.getElementById('sL').textContent=losses;
+  document.getElementById('sTot').textContent=history.length;
+  const n=document.getElementById('sN');
+  n.textContent=(netPts>=0?'+':'')+netPts+' pts';
+  n.className='sv '+(netPts>=0?'g':'r');
+}
+
+async function doAnalysis(){
+  if(analysisRunning)return;
+  analysisRunning=true;
+  document.getElementById('ldEl').classList.add('show');
+  document.getElementById('cntd').textContent='';
+  try{
+    const liveP=await fetchPrice();
+    if(liveP){priceHistory.push({time:Date.now(),price:liveP});if(priceHistory.length>500)priceHistory.shift();updatePriceDisplay(liveP);}
+    const price=liveP||(priceHistory.length>0?priceHistory[priceHistory.length-1].price:null);
+    if(!price){document.getElementById('csReason').textContent='⚠ Cannot fetch price.';return;}
+    checkTrade(price);
+    if(inTrade){document.getElementById('csReason').textContent='Trade active — TP:'+tradeTP.toFixed(2)+' SL:'+tradeSL.toFixed(2);return;}
+    if(priceHistory.length<MIN_PTS){
+      document.getElementById('csBadge').textContent='COLLECTING '+priceHistory.length+'/'+MIN_PTS;
+      document.getElementById('csReason').textContent='Building data '+priceHistory.length+'/'+MIN_PTS+'... (~'+(MIN_PTS-priceHistory.length)*15+'s)';
+      return;
+    }
+    const candles=buildCandles();
+    if(candles&&candles.length>0)processCandles(candles);
+    const ind=calcInd(price);
+    if(!ind)return;
+    document.getElementById('csBadge').textContent='ANALYZING...';
+    document.getElementById('csReason').textContent='RSI:'+ind.rsiV+' '+ind.trend+' '+ind.mom+' → analyzing...';
+    const result=await callGroq(ind);
+    if(!result)return;
+    renderConds(result);
+    if(result.signal==='BUY'||result.signal==='SELL'){openTrade(result.signal,price,result);renderHistCards();}
+    else{
+      document.getElementById('sigBadge').className='sbadge wait';
+      document.getElementById('sigBadge').textContent='⏳ WAIT — '+result.trend;
+      document.getElementById('csBadge').className='cs-badge wait';
+      document.getElementById('csBadge').textContent='WAIT — '+result.trend;
+      document.getElementById('csTime').textContent=new Date().toLocaleTimeString();
+    }
+  }finally{analysisRunning=false;document.getElementById('ldEl').classList.remove('show');}
+}
+
+function startCountdown(ms){
+  let rem=Math.floor(ms/1000);
+  if(countTimer)clearInterval(countTimer);
+  countTimer=setInterval(function(){rem--;if(rem<=0){clearInterval(countTimer);document.getElementById('cntd').textContent='';}else document.getElementById('cntd').innerHTML='<span>'+rem+'s</span>';},1000);
+}
+
+function startAuto(){
+  const ms=parseInt(document.getElementById('intSel').value);
+  document.getElementById('btnStart').style.display='none';
+  document.getElementById('btnStop').style.display='inline-block';
+  document.getElementById('sDot').className='sdot on';
+  document.getElementById('sTxt').textContent='LIVE';
+  document.getElementById('sTxt').className='stxt on';
+  doAnalysis();
+  autoTimer=setInterval(function(){doAnalysis();startCountdown(ms);},ms);
+  startCountdown(ms);
+  if(tickTimer)clearInterval(tickTimer);
+  tickTimer=setInterval(async function(){
+    const p=await fetchPrice();
+    if(p){priceHistory.push({time:Date.now(),price:p});if(priceHistory.length>500)priceHistory.shift();updatePriceDisplay(p);checkTrade(p);}
+  },15000);
+}
+
+function stopAuto(){
+  [autoTimer,countTimer,tickTimer].forEach(function(t){if(t)clearInterval(t);});
+  autoTimer=countTimer=tickTimer=null;
+  document.getElementById('btnStop').style.display='none';
+  document.getElementById('btnStart').style.display='inline-block';
+  document.getElementById('sDot').className='sdot off';
+  document.getElementById('sTxt').textContent='STOPPED';
+  document.getElementById('sTxt').className='stxt off';
+  document.getElementById('cntd').textContent='';
+}
+
+async function analyzeOnce(){await doAnalysis();}
+
+function openHist(){document.getElementById('histModal').style.display='flex';renderHistModal();}
+function closeHist(){document.getElementById('histModal').style.display='none';}
+function clearHist(){if(!confirm('Clear all history?'))return;history=[];wins=0;losses=0;netPts=0;saveHistory();updateStats();renderHistCards();renderHistModal();}
+
+function renderHistModal(){
+  const w=history.filter(function(h){return h.result==='WIN';}).length;
+  const l=history.filter(function(h){return h.result==='LOSS';}).length;
+  const tot=w+l,wr=tot>0?((w/tot)*100).toFixed(1):'0',net=w*TP_PTS-l*SL_PTS,pf=l>0?((w*TP_PTS)/(l*SL_PTS)).toFixed(2):'∞';
+  document.getElementById('hmSub').textContent=tot+' closed · '+history.filter(function(h){return h.result==='OPEN';}).length+' open';
+  const cards=[['WIN RATE',wr+'%',tot+' trades',parseFloat(wr)>=60?'#00e676':parseFloat(wr)>=40?'#f0b429':'#ff1744'],['WINS',w,'+'+w*TP_PTS+' pts','#00e676'],['LOSSES',l,'-'+l*SL_PTS+' pts','#ff1744'],['NET P&L',(net>=0?'+':'')+net+' pts','total',net>=0?'#00e676':'#ff1744'],['PROFIT FACTOR',pf,'ratio','#00b0ff'],['R:R','1:2.5','per trade','#f0b429']];
+  document.getElementById('hmStats').innerHTML=cards.map(function(c){return '<div class="sc"><div class="scl">'+c[0]+'</div><div class="scv" style="color:'+c[3]+'">'+c[1]+'</div><div style="font-size:9px;color:#4a6070;margin-top:3px;">'+c[2]+'</div></div>';}).join('');
+  document.getElementById('hmBar').innerHTML=tot>0?'<div style="display:flex;justify-content:space-between;font-size:9px;margin-bottom:5px;"><span style="color:#00e676;">WIN '+wr+'%</span><span style="color:#4a6070;">Net: '+(net>=0?'+':'')+net+' pts</span><span style="color:#ff1744;">LOSS '+(tot>0?((l/tot)*100).toFixed(1):0)+'%</span></div><div style="height:6px;background:rgba(255,23,68,0.2);border-radius:3px;overflow:hidden;"><div style="height:100%;width:'+wr+'%;background:#00e676;border-radius:3px;"></div></div>':'<div style="color:#4a6070;font-size:10px;">No closed trades yet</div>';
+  if(!history.length){document.getElementById('hmBody').innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:#4a6070;">No trades yet</td></tr>';return;}
+  document.getElementById('hmBody').innerHTML=history.map(function(h,i){
+    const sc=h.signal==='BUY'?'#00e676':'#ff1744',rc=h.result==='WIN'?'#00e676':h.result==='LOSS'?'#ff1744':'#4a6070';
+    const rt=h.result==='WIN'?'✓ WIN':h.result==='LOSS'?'✗ LOSS':'⏳ OPEN',pnl=h.result==='WIN'?'+'+TP_PTS:h.result==='LOSS'?'-'+SL_PTS:'—';
+    return '<tr style="border-bottom:1px solid rgba(13,32,53,0.5);"><td style="padding:7px 10px;color:#4a6070;">'+(history.length-i)+'</td>'
+      +'<td style="padding:7px 10px;"><span style="font-family:Orbitron,monospace;font-size:9px;font-weight:700;color:'+sc+';">'+h.signal+'</span></td>'
+      +'<td style="padding:7px 10px;font-size:9px;color:#c8d8e8;">'+(h.date||'')+' '+h.time+'</td>'
+      +'<td style="padding:7px 10px;font-size:10px;color:#00b0ff;">'+h.price+'</td>'
+      +'<td style="padding:7px 10px;font-size:10px;color:#00e676;">'+h.tp+'</td>'
+      +'<td style="padding:7px 10px;font-size:10px;color:#ff1744;">'+h.sl+'</td>'
+      +'<td style="padding:7px 10px;"><span style="font-size:10px;font-weight:bold;color:'+rc+';">'+rt+'</span></td>'
+      +'<td style="padding:7px 10px;font-size:10px;font-weight:bold;color:'+rc+';">'+pnl+' pts</td></tr>';
+  }).join('');
+}
+
+window.addEventListener('load',function(){
+  updateStats();renderHistCards();
+  if(inTrade){
+    const dir=tradeDir.toLowerCase();
+    document.getElementById('sigBadge').className='sbadge '+dir;
+    document.getElementById('sigBadge').textContent=(tradeDir==='BUY'?'▲ BUY':'▼ SELL')+' @ '+tradeEntry.toFixed(2);
+    document.getElementById('curSig').className='cur-signal '+dir;
+    document.getElementById('csBadge').className='cs-badge '+dir;
+    document.getElementById('csBadge').textContent=(tradeDir==='BUY'?'▲ BUY (RESTORED)':'▼ SELL (RESTORED)')+' @ '+tradeEntry.toFixed(2);
+    document.getElementById('csE').textContent=tradeEntry.toFixed(2);
+    document.getElementById('csT').textContent=tradeTP.toFixed(2);
+    document.getElementById('csS').textContent=tradeSL.toFixed(2);
+    document.getElementById('csLevels').style.display='grid';
+    document.getElementById('tradeProgress').style.display='block';
+    document.getElementById('pillsDiv').style.display='flex';
+    document.getElementById('pEntry').textContent='ENTRY '+tradeEntry.toFixed(2);
+    document.getElementById('pTP').textContent='TP '+tradeTP.toFixed(2);
+    document.getElementById('pSL').textContent='SL '+tradeSL.toFixed(2);
+  }
+  setTimeout(startAuto,500);
+});
+</script>
+</body>
+</html>
