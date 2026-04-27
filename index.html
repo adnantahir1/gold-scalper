@@ -165,6 +165,7 @@
         <div class="tp-bar-wrap"><div class="tp-bar" id="tpBar" style="width:0%"></div></div>
         <div class="sl-bar-wrap"><div class="sl-bar" id="slBar" style="width:0%"></div></div>
         <div class="bar-labels"><span style="color:var(--green)" id="tpDist">—</span><span id="priceDist"></span><span style="color:var(--red)" id="slDist">—</span></div>
+        <button onclick="manualClose()" style="margin-top:6px;width:100%;padding:4px;background:rgba(255,23,68,0.15);border:1px solid #ff1744;color:#ff1744;border-radius:3px;cursor:pointer;font-size:9px;font-family:Share Tech Mono,monospace;">✕ CLOSE TRADE MANUALLY</button>
       </div>
       <div class="cs-reason"><div class="cs-rl">GROQ AI · LLAMA 3</div><div id="csReason">Collecting data... signal in ~75 seconds.</div></div>
       <div class="cs-conds">
@@ -368,6 +369,16 @@ function checkTrade(p){
     closeTrade();saveHistory();updateStats();renderHistCards();}
 }
 
+function manualClose(){
+  if(!confirm('Manually close this trade?')) return;
+  if(history.length) history[0].result='CLOSED';
+  saveHistory();
+  closeTrade();
+  updateStats();
+  renderHistCards();
+  toast('ok','Trade closed manually',4000);
+}
+
 function closeTrade(){
   inTrade=false;tradeDir=tradeEntry=tradeTP=tradeSL=null;
   document.getElementById('pillsDiv').style.display='none';
@@ -566,6 +577,15 @@ window.addEventListener('load',function(){
     document.getElementById('pEntry').textContent='ENTRY '+tradeEntry.toFixed(2);
     document.getElementById('pTP').textContent='TP '+tradeTP.toFixed(2);
     document.getElementById('pSL').textContent='SL '+tradeSL.toFixed(2);
+  }
+  // If trade restored, fetch price immediately to check if TP/SL was hit while tab was closed
+  if(inTrade){
+    fetchPrice().then(function(p){
+      if(p){
+        updatePriceDisplay(p);
+        checkTrade(p);
+      }
+    });
   }
   setTimeout(startAuto,500);
 });
