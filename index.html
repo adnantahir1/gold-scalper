@@ -354,31 +354,37 @@ async function callGroq(ind){
   const mom = ind.mom;
   const trend = ind.trend;
 
-  // BUY conditions (any one strong enough)
-  if(rsi < 32) {
-    signal = 'BUY'; reasoning = 'RSI oversold at '+rsi+'. Strong bounce expected from oversold level.';
-  } else if(e9 > e21 && mom === 'RISING' && rsi < 65) {
-    signal = 'BUY'; reasoning = 'EMA9 above EMA21 with rising momentum. RSI '+rsi+' has room to go higher.';
-  } else if(ind.nearSup && mom === 'RISING') {
-    signal = 'BUY'; reasoning = 'Price bouncing from session support with rising momentum. Good scalp entry.';
-  } else if(trend === 'BULLISH' && rsi < 60 && mom !== 'FALLING') {
-    signal = 'BUY'; reasoning = 'Bullish trend confirmed. EMA alignment bullish. RSI '+rsi+' not overbought.';
+  // ── SIGNAL RULES WITH TREND FILTER ──────────────────
+  // Rule: never fight the trend. RSI oversold in downtrend = keep falling.
+
+  const bullish = trend==='BULLISH' || e9>e21;
+  const bearish = trend==='BEARISH' || e9<e21;
+
+  // BUY: needs bullish evidence + not in clear downtrend
+  if(!bearish && rsi < 35 && mom !== 'FALLING') {
+    signal = 'BUY'; reasoning = 'RSI oversold at '+rsi+' with no bearish trend. Bounce setup confirmed.';
+  } else if(bullish && e9>e21 && mom==='RISING' && rsi<65) {
+    signal = 'BUY'; reasoning = 'Bullish EMA alignment with rising momentum. RSI '+rsi+' has room to go higher.';
+  } else if(bullish && ind.nearSup && mom==='RISING' && rsi<60) {
+    signal = 'BUY'; reasoning = 'Price bouncing from support in bullish structure. Clean scalp entry.';
+  } else if(trend==='BULLISH' && e9>e21 && e21>e50 && rsi<58 && mom!=='FALLING') {
+    signal = 'BUY'; reasoning = 'Full bullish EMA stack confirmed. RSI '+rsi+' neutral. Trend continuation buy.';
   }
 
-  // SELL conditions (any one strong enough)
-  else if(rsi > 68) {
-    signal = 'SELL'; reasoning = 'RSI overbought at '+rsi+'. Rejection expected from overbought level.';
-  } else if(e9 < e21 && mom === 'FALLING' && rsi > 35) {
-    signal = 'SELL'; reasoning = 'EMA9 below EMA21 with falling momentum. RSI '+rsi+' has room to drop.';
-  } else if(ind.nearRes && mom === 'FALLING') {
-    signal = 'SELL'; reasoning = 'Price rejecting session resistance with falling momentum. Good short entry.';
-  } else if(trend === 'BEARISH' && rsi > 40 && mom !== 'RISING') {
-    signal = 'SELL'; reasoning = 'Bearish trend confirmed. EMA alignment bearish. RSI '+rsi+' not oversold.';
+  // SELL: needs bearish evidence + not in clear uptrend
+  else if(!bullish && rsi > 65 && mom !== 'RISING') {
+    signal = 'SELL'; reasoning = 'RSI overbought at '+rsi+' with no bullish trend. Rejection setup confirmed.';
+  } else if(bearish && e9<e21 && mom==='FALLING' && rsi>35) {
+    signal = 'SELL'; reasoning = 'Bearish EMA alignment with falling momentum. RSI '+rsi+' has room to drop.';
+  } else if(bearish && ind.nearRes && mom==='FALLING' && rsi>40) {
+    signal = 'SELL'; reasoning = 'Price rejecting resistance in bearish structure. Clean short entry.';
+  } else if(trend==='BEARISH' && e9<e21 && e21<e50 && rsi>42 && mom!=='RISING') {
+    signal = 'SELL'; reasoning = 'Full bearish EMA stack confirmed. RSI '+rsi+' neutral. Trend continuation sell.';
   }
 
-  // WAIT — truly no setup
+  // WAIT
   else {
-    reasoning = 'No clear setup: RSI '+rsi+', Trend '+trend+', Mom '+mom+'. Waiting for momentum confirmation.';
+    reasoning = 'No clean setup: RSI '+rsi+' Trend '+trend+' Mom '+mom+'. Conflicting signals — waiting.';
   }
 
   // Use Groq only to get a confirmation and better reasoning (non-blocking)
